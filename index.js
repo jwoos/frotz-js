@@ -1,8 +1,8 @@
+'use strict';
 const fs = require('fs');
 const exec = require('child_process').execFile;
-const dfrotz_file = './ifroot/dfrotz';
-const zork1 =  ['-w','500','./ifroot/ZORK1.DAT'];
-function ZorkFilter(element,index,array)
+
+function ZFilter(element,index,array)
 {
     if(array.length ==3 && index ==0)
 	return true;
@@ -14,78 +14,101 @@ function ZorkFilter(element,index,array)
 	return false;
     return true;
 }
-function DFrotzInterface(proc_cmd,proc_arg)
+function DFrotzInterface(dfrotz_executable,dfrotz_game_image,save_file,output_filter=undefined)
 {
     var that = this;
-    that.dfrotz = null;
+    that.dfrotz = null; 
+    that.dfrotz_executable=dfrotz_executable;
+    that.dfrotz_game_image=dfrotz_game_image; 
+    that.save_file=save_file; 
+    that.output_filter=output_filter;
     that.dropAll=true;
-    that.getSaveFilename=()=>{
-	return "z1.sav";
-    };
-    that.command=(cmd)=>{
-	that.dfrotz.stdin.write(`${cmd}\n`);
-    };
-    that.iteration=(cmd,done_callback)=>{
-	var output ="";
-	if(!cmd)
-	    cmd="";
-	fs.exists(that.getSaveFilename(),(save_file_exists)=>{
-	    that.dropAll=save_file_exists;
-	    that.dfrotz = exec(proc_cmd,proc_arg,(error, stdout, stderr) => {
-		if(error)
-		    console.log(error);
-		if(stderr)
-		    console.log(stderr);
-	    });
-	    that.dfrotz.on('close',(code)=>{
-		done_callback(output);
-	    });
-	    that.dfrotz.stdout.on('data', (data) => {
-		data = data.trim()
-		if(data !== "")
-		{
-		    if(that.dropAll == false)
-		    {
-			output = output+data;
-		    }
-		} 
-	    });
-	    
-	    if(save_file_exists)
+    that.save_file = save_file;
+    return that;
+}
+
+DFrotzInterface.prototype.get_save_filename=function(){
+    var that = this;
+    return that.save_file;
+};
+DFrotzInterface.prototype.command = function(cmd){
+    var that = this;
+    that.dfrotz.stdin.write(`${cmd}\n`);
+};
+
+DFrotzInterface.prototype.iteration=function(cmd,done_callback){
+    var output ="";
+    var perror=undefined;
+    var that=this;
+    if(!cmd)
+	cmd="";
+    fs.exists(that.get_save_filename(),(save_file_exists)=>{
+	var dfrotz_arg =  ['-w','500',that.dfrotz_game_image];
+	that.dropAll=save_file_exists;
+	
+	that.dfrotz = exec(that.dfrotz_executable,dfrotz_arg,(error, stdout, stderr) => {
+	    if(error)
+		perror = error;
+	    if(stderr)
+		perror = stderr;
+	});
+	that.dfrotz.on('close',(code)=>{
+	    if(!perror)
 	    {
-		// Check file before restore
-		that.command("restore");
-		that.command(that.getSaveFilename());
+		output = output.replace('\r','');
+		output = output.split('\n');
+		if(that.output_filter)
+		    output=output.filter(that.output_filter);
+	    }
+	    done_callback(perror,output);
+	});
+	that.dfrotz.stdout.on('data', (data) => {
+	    data = data.trim()
+	    if(data !== "")
+	    {
+		if(that.dropAll == false)
+		{
+		    output = output+data;
+		}
+	    } 
+	});
+
+	if(save_file_exists)
+	{
+	    // Check file before restore
+	    that.command("restore");
+	    that.command(that.get_save_filename());
+	}
+	setTimeout(()=>{
+	    that.dropAll=false;
+	    if(cmd && cmd != "")
+	    {
+		that.command(cmd);
 	    }
 	    setTimeout(()=>{
-		that.dropAll=false;
-		if(cmd && cmd != "")
-		    that.command(cmd);
-		setTimeout(()=>{
-		    that.dropAll=true
-		    //Always save
-		    that.command("save");
-		    that.command(that.getSaveFilename());
-		    that.command("Y");
-		    that.command("quit");
-		    that.command("Y");
-		},100);
+		that.dropAll=true
+		that.command("save");
+		that.command(that.get_save_filename());
+		that.command("Y");
+		that.command("quit");
+		that.command("Y");
 	    },100);
-
-		
-	});
-    };
-    
-}
-function dfrotz_command(process,command)
-{
-    process.stdin.write(`${command}\n`);
-}
-
-var dint = new DFrotzInterface(dfrotz_file,zork1);
-dint.iteration(process.argv[2],(gameoutput)=>{
-    gameoutput =gameoutput.replace('\r','');
-    gameoutput = gameoutput.split('\n').filter(ZorkFilter);
-    
-    console.log(gameoutput);
+	},100);
+    });
+};
+exports.DFrotzInterface=DFrotzInterface;
+exports.ZFilter=ZFilter;
+/*
+var dint = new DFrotzInterface('./ifroot/dfrotz','./ifroot/ZORK1.DAT',"./ifroot/zk1.sav",ZFilter);
+dint.iteration(process.argv[2],(error,gameoutput)=>{
+    if(error)
+    {
+	console.log(error);
+    }
+    else
+    {
+	console.log(gameoutput);
+    }
+    process.exit(0);
 });
+*/
