@@ -1,0 +1,23 @@
+{
+  "name": "node-frotz",
+  "version": "0.0.0",
+  "description": "Frotz interface for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lbenini/node-frotz.git"
+  },
+  "keywords": [
+    "Frotz",
+    "Node"
+  ],
+  "author": "Luca Benini <lbenini@gmail.com> (http://nope.tech)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/lbenini/node-frotz/issues"
+  },
+  "homepage": "https://github.com/lbenini/node-frotz#readme"
+}
