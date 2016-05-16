@@ -64,6 +64,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 	});
 	that.dfrotz.stdout.on('data', (data) => {
 	    data = data.trim()
+	    console.log(data);
 	    if(data !== "")
 	    {
 		if(that.dropAll == false)
@@ -92,6 +93,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 		that.command("Y");
 		that.command("quit");
 		that.command("Y");
+		that.command("SI");
 	    },100);
 	},100);
     });
@@ -99,7 +101,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 exports.DFrotzInterface=DFrotzInterface;
 exports.ZFilter=ZFilter;
 /*
-var dint = new DFrotzInterface('./ifroot/dfrotz','./ifroot/ZORK1.DAT',"./ifroot/zk1.sav",ZFilter);
+var dint = new DFrotzInterface('./ifroot/dfrotz','./ifroot/enigma.dat',"./ifroot/enigma.sav",ZFilter);
 dint.iteration(process.argv[2],(error,gameoutput)=>{
     if(error)
     {
@@ -111,4 +113,5 @@ dint.iteration(process.argv[2],(error,gameoutput)=>{
     }
     process.exit(0);
 });
+
 */
