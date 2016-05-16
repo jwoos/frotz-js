@@ -53,7 +53,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 		perror = stderr;
 	});
 	that.dfrotz.on('close',(code)=>{
-	    if(!perror)
+	    if(!perror || perror.length==0)
 	    {
 		output = output.replace('\r','');
 		output = output.split('\n');
