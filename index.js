@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
 const exec = require('child_process').execFile;
-
+const iconv = require('iconv');
 function ZFilter(element,index,array)
 {
     if(array.length ==3 && index ==0)
@@ -46,7 +46,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 	var dfrotz_arg =  ['-w','500','-h','999',that.dfrotz_game_image];
 	that.dropAll=save_file_exists;
 	
-	that.dfrotz = exec(that.dfrotz_executable,dfrotz_arg,(error, stdout, stderr) => {
+	that.dfrotz = exec(that.dfrotz_executable,dfrotz_arg,{"encoding":"latin1"},(error, stdout, stderr) => {
 	    if(error)
 		perror = error;
 	    if(stderr)
@@ -63,8 +63,12 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 	    done_callback(perror,output);
 	});
 	that.dfrotz.stdout.on('data', (data) => {
+	    var encoder = new iconv.Iconv('latin1', 'utf-8');
+	    data= encoder.convert(data, 'utf8');
+//	    console.log(data.toString());
+	    data = data.toString();
 	    data = data.trim()
-	    console.log(data);
+
 	    if(data !== "")
 	    {
 		if(that.dropAll == false)
@@ -100,8 +104,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
 };
 exports.DFrotzInterface=DFrotzInterface;
 exports.ZFilter=ZFilter;
-/*
-var dint = new DFrotzInterface('./ifroot/dfrotz','./ifroot/enigma.dat',"./ifroot/enigma.sav",ZFilter);
+/*var dint = new DFrotzInterface('./ifroot/dfrotz','./ifroot/enigma.dat',"./ifroot/enigma.sav",ZFilter);
 dint.iteration(process.argv[2],(error,gameoutput)=>{
     if(error)
     {
@@ -113,5 +116,4 @@ dint.iteration(process.argv[2],(error,gameoutput)=>{
     }
     process.exit(0);
 });
-
 */

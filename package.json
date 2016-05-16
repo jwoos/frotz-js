@@ -20,5 +20,7 @@
     "url": "https://github.com/lbenini/node-frotz/issues"
   },
   "homepage": "https://github.com/lbenini/node-frotz#readme",
-  "dependencies": {}
+  "dependencies": {
+    "iconv": "^2.2.0"
+  }
 }
