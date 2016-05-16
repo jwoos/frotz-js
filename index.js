@@ -43,7 +43,7 @@ DFrotzInterface.prototype.iteration=function(cmd,done_callback){
     if(!cmd)
 	cmd="";
     fs.exists(that.get_save_filename(),(save_file_exists)=>{
-	var dfrotz_arg =  ['-w','500',that.dfrotz_game_image];
+	var dfrotz_arg =  ['-w','500','-h','999',that.dfrotz_game_image];
 	that.dropAll=save_file_exists;
 	
 	that.dfrotz = exec(that.dfrotz_executable,dfrotz_arg,(error, stdout, stderr) => {
