@@ -4,7 +4,7 @@
   "description": "Frotz interface for node",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "q": "^1.4.1"
   },
   "devDependencies": {
+    "colors": "^1.1.2",
     "jasmine": "^2.4.1"
   }
 }
