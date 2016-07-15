@@ -16,12 +16,4 @@ dint.iteration("look", (error, gameoutput) => {
 });
 ```
 
-# Installation
-This module requires the dfrotz binary.
-
-1. Clone https://github.com/DavidGriffith/frotz
-2. Go to the cloned directory and `make dumb`
-	- This compiles the "dumb version" which does not depend on ncurses and uses only terminal: https://github.com/DavidGriffith/frotz/blob/master/DUMB
-3. `make install_dumb` to install
-	- You may need sudo permissions
-	- `make uninstall_dumb` to uninstall
+[how to play](https://github.com/DavidGriffith/frotz/blob/master/HOW_TO_PLAY)
