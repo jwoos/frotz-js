@@ -8,19 +8,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lbenini/node-frotz.git"
+    "url": "https://github.com/jwoos/javascript_frotz"
   },
   "keywords": [
-    "Frotz",
-    "Node"
+    "frotz",
+    "node"
   ],
-  "author": "Luca Benini <lbenini@gmail.com> (http://nope.tech)",
+  "author": "Jun Woo Shin",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/lbenini/node-frotz/issues"
+    "url": "https://github.com/jwoos/javascript_frotz/issues"
   },
-  "homepage": "https://github.com/lbenini/node-frotz#readme",
+  "homepage": "https://github.com/jwoos/javascript_frotz#readme",
   "dependencies": {
-    "iconv": "^2.2.0"
+    "iconv": "^2.2.0",
+    "q": "^1.4.1"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
   }
 }
