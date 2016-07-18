@@ -1,6 +1,7 @@
 # Node integration for frotz
 
 [![Build Status](https://travis-ci.org/jwoos/javascript_frotz.svg?branch=master)](https://travis-ci.org/jwoos/javascript_frotz)
+[![Dependency Status](https://dependencyci.com/github/jwoos/javascript_frotz/badge)](https://dependencyci.com/github/jwoos/javascript_frotz)
 
 ```js
 const frotz=require('node-frotz');
