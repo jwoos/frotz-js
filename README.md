@@ -4,6 +4,8 @@
 [![Dependency Status](https://dependencyci.com/github/jwoos/javascript_frotz/badge)](https://dependencyci.com/github/jwoos/javascript_frotz)
 
 ### Installation *OPTIONAL*
+**THIS WILL ONLY RUN ON NODE V6 AND UP.**: this is due to the heavy use of ES6 syntax including defining a class instead of a function and its prototypes (although it's just syntactic sugar).
+
 This module requires the dfrotz binary. One is provided but maybe you just want to compile it yourself?
 
 1. Clone https://github.com/DavidGriffith/frotz
@@ -35,7 +37,7 @@ const default = {
 	gameImage: './frotz/data/zork1/DATA/ZORK1.DAT',
 	saveFile: './frotz/data/zork1/SAVE/zork1.sav',
 	outputFilter: DFrotzInterface.filter
-}
+};
 ```
 
 One call of iteration will start the game from a save if there is one otherwise it will create a new save. It will then run your action and save and quit automatically. This reduces the overhead of session management and introduces the benefit of having multiple games going on at once.
@@ -64,17 +66,18 @@ interfacer.iteration('look', (error, gameoutput) => {
 ### To Do
 The following are listed in the order in which they will most likely be done
 
-- Full test coverage
-- Make arguments into object rather than positional
 - Replace `fs.exists` with `fs.stat`
 	- Needs error handling
+- Incorporate Q
+	- In place of typical Node callbacks
+	- Instead of `setTimeout`
+- [debug](https://www.npmjs.com/package/debug) ?
+- Full test coverage
+- Make arguments into object rather than positional
 - Check if variable directories work
 	- What does the given directory have to be relative to?
 	- Might require `__dirname` prefix
 - Break `iteration` into separate functions
-- Incorporate Q
-	- In place of typical Node callbacks
-	- Instead of `setTimeout`
 - Validate paths passed as arguments
 	- `fs.stat`
 - Look into encoding
