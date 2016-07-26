@@ -66,12 +66,12 @@ interfacer.iteration('look', (error, gameoutput) => {
 ### To Do
 The following are listed in the order in which they will most likely be done
 
-- Replace `fs.exists` with `fs.stat`
-	- Needs error handling
 - Incorporate Q
 	- In place of typical Node callbacks
 	- Instead of `setTimeout`
 - [debug](https://www.npmjs.com/package/debug) ?
+- backport to ES5
+	- have an option to run ES5
 - Full test coverage
 - Make arguments into object rather than positional
 - Check if variable directories work
@@ -80,7 +80,5 @@ The following are listed in the order in which they will most likely be done
 - Break `iteration` into separate functions
 - Validate paths passed as arguments
 	- `fs.stat`
-- Look into encoding
-	- Is iconv really needed?
 - Write a better filtering function
 - Continuous session
