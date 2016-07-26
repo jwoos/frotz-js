@@ -3,8 +3,9 @@
 [![Build Status](https://travis-ci.org/jwoos/javascript_frotz.svg?branch=master)](https://travis-ci.org/jwoos/javascript_frotz)
 [![Dependency Status](https://dependencyci.com/github/jwoos/javascript_frotz/badge)](https://dependencyci.com/github/jwoos/javascript_frotz)
 
+**THIS WILL ONLY RUN ON NODE V6 AND UP**: this is due to the heavy use of ES6 syntax including defining a class instead of a function and its prototypes (although it's just syntactic sugar). I will work to make the ES5 option available without transpiling after other features have been fleshed out.
+
 ### Installation *OPTIONAL*
-**THIS WILL ONLY RUN ON NODE V6 AND UP.**: this is due to the heavy use of ES6 syntax including defining a class instead of a function and its prototypes (although it's just syntactic sugar).
 
 This module requires the dfrotz binary. One is provided but maybe you just want to compile it yourself?
 
@@ -69,9 +70,7 @@ The following are listed in the order in which they will most likely be done
 - Incorporate Q
 	- In place of typical Node callbacks
 	- Instead of `setTimeout`
-- [debug](https://www.npmjs.com/package/debug) ?
-- backport to ES5
-	- have an option to run ES5
+		- this essentially comes down to having a callback to implement it on
 - Full test coverage
 - Make arguments into object rather than positional
 - Check if variable directories work
@@ -81,4 +80,6 @@ The following are listed in the order in which they will most likely be done
 - Validate paths passed as arguments
 	- `fs.stat`
 - Write a better filtering function
+- backport to ES5
+	- have an option to run ES5
 - Continuous session
