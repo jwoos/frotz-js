@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/jwoos/javascript_frotz#readme",
   "dependencies": {
-    "iconv": "^2.2.0",
     "q": "^1.4.1"
   },
   "devDependencies": {

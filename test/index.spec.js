@@ -5,7 +5,6 @@ const DFrotzInterface = require('../index');
 const fs = require('fs');
 const q = require('q');
 const childProcess = require('child_process');
-const iconv = require('iconv');
 
 const colors = require('colors');
 
@@ -27,12 +26,10 @@ describe('Class: DFrotzInterface', () => {
 
             /*
              *util.expectList(frotz, {
-             *    encoder: ['equal', './frotz/dfrotz'],
              *    executable: ['equal', './frotz']
              *});
              */
 
-            expect(frotz.encoder).toBeDefined();
             expect(frotz.executable).toEqual('./frotz/dfrotz');
             expect(frotz.gameImage).toEqual('./frotz/data/zork1/DATA/ZORK1.DAT');
             expect(frotz.saveFile).toEqual('./frotz/data/zork1/SAVE/zork1.sav');
@@ -44,7 +41,6 @@ describe('Class: DFrotzInterface', () => {
             let mockFilter = () => {};
             let frotz = new DFrotzInterface('test/executable', 'test/gameImage', 'test/save', mockFilter);
 
-            expect(frotz.encoder).toBeDefined();
             expect(frotz.executable).toEqual('test/executable');
             expect(frotz.gameImage).toEqual('test/gameImage');
             expect(frotz.saveFile).toEqual('test/save');
