@@ -43,6 +43,20 @@ const default = {
 
 One call of iteration will start the game from a save if there is one otherwise it will create a new save. It will then run your action and save and quit automatically. This reduces the overhead of session management and introduces the benefit of having multiple games going on at once.
 
+Iteration can (and should) be called with a callback which takes `error` and `output`. Their structure is described below:
+
+```js
+error: {
+	stderr: // STRING: dfrotz stderr,
+	error: // ERROR: error from running dfrotz
+}
+
+output: {
+	pretty: [''] // ARRAY[STRING]: text that has been filtered and trimmed
+	full: '' // STRING: dfrotz stdout
+}
+```
+
 ### Example
 
 ```js
@@ -50,13 +64,11 @@ const frotz = require('node-frotz');
 
 let interfacer = new frotz('/path/to/executable', '/path/to/game/file', '/path/to/save', aFilterFunction);
 
-interfacer.iteration('look', (error, gameoutput) => {
+interfacer.iteration('look', (error, output) => {
 	if (error) {
-		// error is an object containing stderror and/or normal error
-		console.log(error);
+		console.log(error.error);
 	} else {
-		// output is filtered through the given or default filter and returned
-		console.log(gameoutput);
+		console.log(output.output);
 	}
 });
 ```
@@ -67,10 +79,11 @@ interfacer.iteration('look', (error, gameoutput) => {
 ### To Do
 The following are listed in the order in which they will most likely be done
 
-- Incorporate Q
-	- In place of typical Node callbacks
-	- Instead of `setTimeout`
-		- this essentially comes down to having a callback to implement it on
+- replace execFile with promise
+	- chain the whole thing
+- implement errors and promise failure handling
+	- line 178
+- static method to delete save file
 - Full test coverage
 - Make arguments into object rather than positional
 - Check if variable directories work
