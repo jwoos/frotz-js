@@ -39,7 +39,12 @@ describe('Class: DFrotzInterface', () => {
 
         it('should take in options to override defaults', () => {
             let mockFilter = () => {};
-            let frotz = new DFrotzInterface('test/executable', 'test/gameImage', 'test/save', mockFilter);
+            let frotz = new DFrotzInterface({
+				executable: 'test/executable',
+				gameImage: 'test/gameImage',
+				saveFile: 'test/save',
+				outputFilter: mockFilter
+			});
 
             expect(frotz.executable).toEqual('test/executable');
             expect(frotz.gameImage).toEqual('test/gameImage');

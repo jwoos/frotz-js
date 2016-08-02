@@ -19,7 +19,7 @@ OR
 3. Copy the dfrotz executable to your path of choice and make note of it
 
 ### Interfacer
-The constructor takes four arguments currently:
+The constructor takes an object of four arguments currently:
 
 1. Path to the dumb frotz executable
 	- It has to be dumb frotz as the normal frotz makes use of ncurses
@@ -62,7 +62,12 @@ output: {
 ```js
 const frotz = require('node-frotz');
 
-let interfacer = new frotz('/path/to/executable', '/path/to/game/file', '/path/to/save', aFilterFunction);
+let interfacer = new frotz({
+	executable: '/path/to/executable',
+	gameImage: '/path/to/game/file',
+	saveFile: '/path/to/save',
+	outputFilter: aFilterFunction
+});
 
 interfacer.iteration('look', (error, output) => {
 	if (error) {
@@ -85,7 +90,6 @@ The following are listed in the order in which they will most likely be done
 	- line 178
 - static method to delete save file
 - Full test coverage
-- Make arguments into object rather than positional
 - Check if variable directories work
 	- What does the given directory have to be relative to?
 	- Might require `__dirname` prefix
