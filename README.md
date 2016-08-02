@@ -82,21 +82,4 @@ interfacer.iteration('look', (error, output) => {
 [how to play](https://github.com/DavidGriffith/frotz/blob/master/HOW_TO_PLAY)
 
 ### To Do
-The following are listed in the order in which they will most likely be done
-
-- replace execFile with promise
-	- chain the whole thing
-- implement errors and promise failure handling
-	- line 178
-- static method to delete save file
-- Full test coverage
-- Check if variable directories work
-	- What does the given directory have to be relative to?
-	- Might require `__dirname` prefix
-- Break `iteration` into separate functions
-- Validate paths passed as arguments
-	- `fs.stat`
-- Write a better filtering function
-- backport to ES5
-	- have an option to run ES5
-- Continuous session
+Check the [to do list](https://github.com/jwoos/javascript_frotz/issues)
