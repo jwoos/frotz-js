@@ -2,15 +2,10 @@
 
 const DFrotzInterface = require('../index');
 
-const fs = require('fs');
 const q = require('q');
 const childProcess = require('child_process');
 
 const colors = require('colors');
-
-const util = {
-	expectList: (obj, props) => {}
-};
 
 colors.setTheme({
 	warn: 'yellow',
@@ -64,8 +59,8 @@ describe('Class: DFrotzInterface', () => {
 			let result = arr.filter(DFrotzInterface.filter);
 
 			expect(result).toEqual([
-					'first',
-					'second'
+				'first',
+				'second'
 			]);
 		});
 
@@ -88,7 +83,7 @@ describe('Class: DFrotzInterface', () => {
 			];
 
 			expect(arr.filter(DFrotzInterface.filter)).toEqual([
-					'first'
+				'first'
 			]);
 		});
 	});
@@ -144,7 +139,7 @@ describe('Class: DFrotzInterface', () => {
 			spyOn(q, 'defer').and.returnValues(mockDefer);
 			spyOn(mockDefer.promise, 'delay').and.callThrough();
 
-			let result = frotz.command('command');
+			frotz.command('command');
 
 			expect(mockDefer.promise.delay).toHaveBeenCalledWith(10);
 		});
@@ -317,7 +312,7 @@ describe('Class: DFrotzInterface', () => {
 		});
 
 		it('should throw error if no command', (done) => {
-			let result = frotz.iteration('', mockFunction);
+			frotz.iteration('', mockFunction);
 			let saveFileExists = true;
 
 			mockDefers.checkForSaveFile.resolve(saveFileExists);

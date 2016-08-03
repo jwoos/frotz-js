@@ -4,6 +4,7 @@
   "description": "Frotz interface for node",
   "main": "index.js",
   "scripts": {
+		"pretest": "eslint test/**/*.js lib/**/*.js",
     "test": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json"
   },
   "repository": {
@@ -26,6 +27,7 @@
   "devDependencies": {
     "colors": "^1.1.2",
     "debug": "^2.2.0",
+    "eslint": "^3.2.2",
     "jasmine": "^2.4.1"
   }
 }
