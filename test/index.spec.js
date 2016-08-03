@@ -1,7 +1,9 @@
 'use strict';
 
 const DFrotzInterface = require('../index');
+const errors = require('../lib/errors');
 
+const fs = require('fs');
 const q = require('q');
 const childProcess = require('child_process');
 
@@ -15,15 +17,13 @@ colors.setTheme({
 
 describe('Class: DFrotzInterface', () => {
 	describe('Method: constructor', () => {
+		beforeEach(() => {
+			spyOn(DFrotzInterface.prototype, 'validateOptions');
+		});
 		it('should set options by default', () => {
 			let frotz = new DFrotzInterface();
 
-			/*
-			 *util.expectList(frotz, {
-			 *    executable: ['equal', './frotz']
-			 *});
-			 */
-
+			expect(frotz.validateOptions).toHaveBeenCalled();
 			expect(frotz.executable).toEqual('./frotz/dfrotz');
 			expect(frotz.gameImage).toEqual('./frotz/data/zork1/DATA/ZORK1.DAT');
 			expect(frotz.saveFile).toEqual('./frotz/data/zork1/SAVE/zork1.sav');
@@ -33,6 +33,7 @@ describe('Class: DFrotzInterface', () => {
 
 		it('should take in options to override defaults', () => {
 			let mockFilter = () => {};
+
 			let frotz = new DFrotzInterface({
 				executable: 'test/executable',
 				gameImage: 'test/gameImage',
@@ -40,6 +41,7 @@ describe('Class: DFrotzInterface', () => {
 				outputFilter: mockFilter
 			});
 
+			expect(frotz.validateOptions).toHaveBeenCalled();
 			expect(frotz.executable).toEqual('test/executable');
 			expect(frotz.gameImage).toEqual('test/gameImage');
 			expect(frotz.saveFile).toEqual('test/save');
@@ -109,6 +111,56 @@ describe('Class: DFrotzInterface', () => {
 			let result = DFrotzInterface.stripWhiteSpace(str, false, true);
 
 			expect(result).toEqual('asd   asd');
+		});
+	});
+
+	describe('Method: validateOptions', () => {
+		let frotz;
+
+		beforeEach(() => {
+			frotz = new DFrotzInterface();
+		});
+
+		it('should not do anything for default params', () => {
+			spyOn(fs, 'statSync');
+			frotz.validateOptions({});
+
+			expect(fs.statSync).not.toHaveBeenCalled();
+		});
+
+		it('should throw an error if directory', () => {
+			spyOn(fs, 'statSync').and.returnValues({
+				isFile: () => false
+			});
+
+			expect(() => {
+				frotz.validateOptions({
+					executable: 'test'
+				});
+			}).toThrow(new errors.FileError('Invalid file - test'));
+		});
+
+		it('should throw error if invalid path', () => {
+			spyOn(fs, 'statSync').and.callFake(() => {
+				let e = new Error('');
+				e.path = 'test';
+
+				throw e;
+			});
+
+			expect(() => {
+				frotz.validateOptions({
+					executable: 'test'
+				});
+			}).toThrowError(errors.FileError, 'Invalid file - test');
+		});
+
+		it('should throw error if outputFilter is not a function', () => {
+			expect(() => {
+				frotz.validateOptions({
+					outputFilter: 'string'
+				});
+			}).toThrowError(TypeError, 'Expected type function, got type string');
 		});
 	});
 
