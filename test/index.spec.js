@@ -9,52 +9,51 @@ const childProcess = require('child_process');
 const colors = require('colors');
 
 const util = {
-    expectList: (obj, props) => {
-    }
+	expectList: (obj, props) => {}
 };
 
 colors.setTheme({
-    warn: 'yellow',
-    error: 'red',
-    debug: 'blue'
+	warn: 'yellow',
+	error: 'red',
+	debug: 'blue'
 });
 
 describe('Class: DFrotzInterface', () => {
-    describe('Method: constructor', () => {
-        it('should set options by default', () => {
-            let frotz = new DFrotzInterface();
+	describe('Method: constructor', () => {
+		it('should set options by default', () => {
+			let frotz = new DFrotzInterface();
 
-            /*
-             *util.expectList(frotz, {
-             *    executable: ['equal', './frotz']
-             *});
-             */
+			/*
+			 *util.expectList(frotz, {
+			 *    executable: ['equal', './frotz']
+			 *});
+			 */
 
-            expect(frotz.executable).toEqual('./frotz/dfrotz');
-            expect(frotz.gameImage).toEqual('./frotz/data/zork1/DATA/ZORK1.DAT');
-            expect(frotz.saveFile).toEqual('./frotz/data/zork1/SAVE/zork1.sav');
-            expect(frotz.outputFilter).toEqual(DFrotzInterface.filter);
-            expect(frotz.dropAll).toEqual(true);
-        });
+			expect(frotz.executable).toEqual('./frotz/dfrotz');
+			expect(frotz.gameImage).toEqual('./frotz/data/zork1/DATA/ZORK1.DAT');
+			expect(frotz.saveFile).toEqual('./frotz/data/zork1/SAVE/zork1.sav');
+			expect(frotz.outputFilter).toEqual(DFrotzInterface.filter);
+			expect(frotz.dropAll).toEqual(true);
+		});
 
-        it('should take in options to override defaults', () => {
-            let mockFilter = () => {};
-            let frotz = new DFrotzInterface({
+		it('should take in options to override defaults', () => {
+			let mockFilter = () => {};
+			let frotz = new DFrotzInterface({
 				executable: 'test/executable',
 				gameImage: 'test/gameImage',
 				saveFile: 'test/save',
 				outputFilter: mockFilter
 			});
 
-            expect(frotz.executable).toEqual('test/executable');
-            expect(frotz.gameImage).toEqual('test/gameImage');
-            expect(frotz.saveFile).toEqual('test/save');
-            expect(frotz.outputFilter).toEqual(mockFilter);
-            expect(frotz.dropAll).toEqual(true);
-        });
-    });
+			expect(frotz.executable).toEqual('test/executable');
+			expect(frotz.gameImage).toEqual('test/gameImage');
+			expect(frotz.saveFile).toEqual('test/save');
+			expect(frotz.outputFilter).toEqual(mockFilter);
+			expect(frotz.dropAll).toEqual(true);
+		});
+	});
 
-    describe('Method: filter', () => {
+	describe('Method: filter', () => {
 		it('should filter string starting with >', () => {
 			let arr = [
 				'first',
@@ -65,8 +64,8 @@ describe('Class: DFrotzInterface', () => {
 			let result = arr.filter(DFrotzInterface.filter);
 
 			expect(result).toEqual([
-				'first',
-				'second'
+					'first',
+					'second'
 			]);
 		});
 
@@ -89,7 +88,7 @@ describe('Class: DFrotzInterface', () => {
 			];
 
 			expect(arr.filter(DFrotzInterface.filter)).toEqual([
-				'first'
+					'first'
 			]);
 		});
 	});
@@ -118,7 +117,7 @@ describe('Class: DFrotzInterface', () => {
 		});
 	});
 
-    describe('Method: command', () => {
+	describe('Method: command', () => {
 		let frotz;
 		let mockDefer;
 
@@ -163,6 +162,8 @@ describe('Class: DFrotzInterface', () => {
 		});
 
 		it('should always resolve', () => {
+			frotz.saveFile = 'asdasdas/dasdasd';
+
 			frotz.checkForSaveFile().then((val) => {
 				expect(val).toEqual(false);
 			});
@@ -241,5 +242,95 @@ describe('Class: DFrotzInterface', () => {
 		});
 	});
 
-    describe('Method: iteration', () => {});
+	describe('Method: init', () => {
+		let frotz;
+		let stdout;
+		let mockFunction;
+
+		beforeEach(() => {
+			frotz = new DFrotzInterface();
+
+			mockFunction = () => {};
+
+			stdout = {
+				on: mockFunction
+			};
+
+			spyOn(stdout, 'on').and.callThrough();
+			spyOn(childProcess, 'execFile').and.returnValues({
+				stdout: stdout
+			});
+		});
+
+		//spyOn(frotz.dfrotz.stdout, 'on');
+		it('should initialize dfrotz and set it', () => {
+			frotz.init(() => {});
+
+			expect(frotz.dfrotz).toEqual({
+				stdout: stdout
+			});
+		});
+
+		it('should attach an event listener', () => {
+			frotz.init(() => {});
+
+			expect(stdout.on).toHaveBeenCalled();
+		});
+	});
+
+	xdescribe('Method: iteration', () => {
+		let frotz, mockFunction, mockDefers;
+
+		beforeEach(() => {
+			frotz = new DFrotzInterface();
+			mockFunction = () => {};
+			mockDefers = {
+				checkForSaveFile: q.defer(),
+				restoreSave: q.defer()
+			};
+
+			spyOn(frotz, 'checkForSaveFile').and.returnValues(mockDefers.checkForSaveFile.promise);
+			spyOn(frotz, 'init');
+			spyOn(frotz, 'restoreSave').and.returnValues(mockDefers.restoreSave.promise);
+			spyOn(frotz, 'command');
+			spyOn(frotz, 'writeSave');
+			spyOn(q, 'delay').and.callThrough();
+		});
+
+		it('should iterate', (done) => {
+			let result = frotz.iteration('look', mockFunction);
+			let saveFileExists = true;
+
+			result.then(() => {
+				expect(frotz.checkForSaveFile).toHaveBeenCalled();
+				expect(frotz.init).toHaveBeenCalledWith(mockFunction);
+				expect(frotz.restoreSave).toHaveBeenCalledWith(saveFileExists);
+				expect(q.delay).toHaveBeenCalledWith(100);
+				expect(frotz.command).toHaveBeenCalledWith('look');
+				expect(frotz.writeSave).toHaveBeenCalled();
+
+				done();
+			});
+
+			mockDefers.checkForSaveFile.resolve(saveFileExists);
+			mockDefers.restoreSave.resolve();
+		});
+
+		it('should throw error if no command', (done) => {
+			let result = frotz.iteration('', mockFunction);
+			let saveFileExists = true;
+
+			mockDefers.checkForSaveFile.resolve(saveFileExists);
+			mockDefers.restoreSave.resolve();
+
+			expect(frotz.checkForSaveFile).toHaveBeenCalled();
+			expect(frotz.init).toHaveBeenCalledWith(mockFunction);
+			expect(frotz.restoreSave).toHaveBeenCalledWith(saveFileExists);
+			expect(q.delay).toHaveBeenCalledWith(100);
+			expect(frotz.command).toHaveBeenCalledWith('look');
+			expect(frotz.writeSave).toHaveBeenCalled();
+
+			done();
+		});
+	});
 });
