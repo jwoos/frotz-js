@@ -155,6 +155,16 @@ describe('Class: DFrotzInterface', () => {
 			}).toThrowError(errors.FileError, 'Invalid file - test');
 		});
 
+		it('should skip saveFile', () => {
+			spyOn(fs, 'statSync');
+
+			frotz.validateOptions({
+				saveFile: './test.sav'
+			});
+
+			expect(fs.statSync).not.toHaveBeenCalled();
+		});
+
 		it('should throw error if outputFilter is not a function', () => {
 			expect(() => {
 				frotz.validateOptions({
