@@ -4,29 +4,67 @@ const DFrotzInterface = require('../index');
 const errors = require('../lib/errors');
 
 const fs = require('fs');
+const path = require('path');
+
 const q = require('q');
 const childProcess = require('child_process');
-
-const colors = require('colors');
-
-colors.setTheme({
-	warn: 'yellow',
-	error: 'red',
-	debug: 'blue'
-});
 
 describe('Class: DFrotzInterface', () => {
 	describe('Method: constructor', () => {
 		beforeEach(() => {
 			spyOn(DFrotzInterface.prototype, 'validateOptions');
+			spyOn(path, 'join').and.callThrough();
 		});
+
 		it('should set options by default', () => {
 			let frotz = new DFrotzInterface();
 
 			expect(frotz.validateOptions).toHaveBeenCalled();
-			expect(frotz.executable).toEqual('./frotz/dfrotz');
-			expect(frotz.gameImage).toEqual('./frotz/data/zork1/DATA/ZORK1.DAT');
-			expect(frotz.saveFile).toEqual('./frotz/data/zork1/SAVE/zork1.sav');
+
+			expect(path.join).toHaveBeenCalledTimes(3);
+
+			let executablePath = path.parse(frotz.executable);
+			expect(executablePath).toEqual(jasmine.objectContaining({
+				root: '/',
+				base: 'dfrotz',
+				ext: '',
+				name: 'dfrotz'
+			}));
+			expect(executablePath.dir.split('/')).toEqual(jasmine.arrayContaining([
+				'javascript_frotz',
+				'frotz'
+			]));
+
+			let gameImagePath = path.parse(frotz.gameImage);
+			expect(gameImagePath).toEqual(jasmine.objectContaining({
+				root: '/',
+				base: 'ZORK1.DAT',
+				ext: '.DAT',
+				name: 'ZORK1'
+			}));
+			expect(gameImagePath.dir.split('/')).toEqual(jasmine.arrayContaining([
+				'javascript_frotz',
+				'frotz',
+				'data',
+				'zork1',
+				'DATA'
+			]));
+
+			let saveFilePath = path.parse(frotz.saveFile);
+			expect(saveFilePath).toEqual(jasmine.objectContaining({
+				root: '/',
+				base: 'zork1.sav',
+				ext: '.sav',
+				name: 'zork1'
+			}));
+			expect(saveFilePath.dir.split('/')).toEqual(jasmine.arrayContaining([
+				'javascript_frotz',
+				'frotz',
+				'data',
+				'zork1',
+				'SAVE'
+			]));
+
 			expect(frotz.outputFilter).toEqual(DFrotzInterface.filter);
 			expect(frotz.dropAll).toEqual(true);
 		});
