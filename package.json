@@ -8,7 +8,8 @@
   },
   "scripts": {
     "pretest": "eslint test/**/*.js lib/**/*.js",
-    "test": "istanbul cover test/runner.js"
+    "test": "istanbul cover test/runner.js",
+    "posttest": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "colors": "^1.1.2",
+    "coveralls": "^2.11.12",
     "debug": "^2.2.0",
     "eslint": "^3.2.2",
     "istanbul": "^0.4.4",
