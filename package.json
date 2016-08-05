@@ -1,36 +1,39 @@
 {
-	"name": "frotz-interfacer",
-	"version": "1.2.2",
-	"description": "Frotz interface for node",
-	"main": "index.js",
-	"engines": {
-		"node": ">=6.0"
-	},
-	"scripts": {
-		"pretest": "eslint test/**/*.js lib/**/*.js",
-		"test": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/jwoos/javascript_frotz"
-	},
-	"keywords": [
-		"frotz",
-		"node"
-	],
-	"author": "Jun Woo Shin",
-	"license": "GPL-3.0",
-	"bugs": {
-		"url": "https://github.com/jwoos/javascript_frotz/issues"
-	},
-	"homepage": "https://github.com/jwoos/javascript_frotz#readme",
-	"dependencies": {
-		"q": "^1.4.1"
-	},
-	"devDependencies": {
-		"colors": "^1.1.2",
-		"debug": "^2.2.0",
-		"eslint": "^3.2.2",
-		"jasmine": "^2.4.1"
-	}
+  "name": "frotz-interfacer",
+  "version": "1.2.2",
+  "description": "Frotz interface for node",
+  "main": "index.js",
+  "engines": {
+    "node": ">=6.0"
+  },
+  "scripts": {
+    "pretest": "eslint test/**/*.js lib/**/*.js",
+    "test": "istanbul cover test/runner.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwoos/javascript_frotz"
+  },
+  "keywords": [
+    "frotz",
+    "node"
+  ],
+  "author": "Jun Woo Shin",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jwoos/javascript_frotz/issues"
+  },
+  "homepage": "https://github.com/jwoos/javascript_frotz#readme",
+  "dependencies": {
+    "q": "^1.4.1"
+  },
+  "devDependencies": {
+    "colors": "^1.1.2",
+    "debug": "^2.2.0",
+    "eslint": "^3.2.2",
+    "istanbul": "^0.4.4",
+    "jasmine": "^2.4.1",
+    "jasmine-spec-reporter": "^2.5.0",
+    "jasmine-terminal-reporter": "^1.0.2"
+  }
 }
