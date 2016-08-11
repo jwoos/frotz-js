@@ -4,7 +4,7 @@
 [![Dependency Status](https://dependencyci.com/github/jwoos/javascript_frotz/badge)](https://dependencyci.com/github/jwoos/javascript_frotz)
 [![Coverage Status](https://coveralls.io/repos/github/jwoos/javascript_frotz/badge.svg)](https://coveralls.io/github/jwoos/javascript_frotz)
 
-**THIS WILL ONLY RUN ON NODE V6 AND UP**: this is due to the heavy use of ES6 syntax including defining a class instead of a function and its prototypes (although it's just syntactic sugar). I will work to make the ES5 option available after other features have been fleshed out.
+Please note that this is written in ES6 and tranpile using Babel. Initially, I only allowed usage on Node > v6 but decided that backward compatibility was also important. In the future, I will implement usage of the ES6 source files for those who are on v6 and above.
 
 ### Installation
 

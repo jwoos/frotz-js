@@ -7,6 +7,7 @@ const q = require('q');
 const childProcess = require('child_process');
 
 const DFrotzInterface = require('../index');
+const errors = require('../lib/errors');
 
 describe('Unit Test |', () => {
 	describe('Class: DFrotzInterface', () => {
@@ -171,7 +172,7 @@ describe('Unit Test |', () => {
 					});
 
 					expect(fs.statSync).toHaveBeenCalled();
-				}).toThrowError(Error, 'Invalid file - test');
+				}).toThrowError(errors.FileError, 'Invalid file - test');
 			});
 
 			it('should throw error if invalid path', () => {
@@ -188,7 +189,7 @@ describe('Unit Test |', () => {
 					});
 
 					expect(fs.statSync).toHaveBeenCalled();
-				}).toThrowError(Error, 'Invalid file - test');
+				}).toThrowError(errors.FileError, 'Invalid file - test');
 			});
 
 			it('should skip saveFile', () => {
