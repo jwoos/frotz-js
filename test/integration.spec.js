@@ -5,4 +5,4 @@
  *const errors = require('../lib/errors');
  */
 
-describe('Integration', () => {});
+describe('Integration Test |', () => {});
