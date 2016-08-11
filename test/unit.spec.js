@@ -1,26 +1,26 @@
 'use strict';
 
-const DFrotzInterface = require('../index');
-const errors = require('../lib/errors');
-
 const fs = require('fs');
 const path = require('path');
 
 const q = require('q');
 const childProcess = require('child_process');
 
-describe('Unit', () => {
+const DFrotzInterface = require('../index');
+const errors = require('../lib/errors');
+
+describe('Unit Test |', () => {
 	describe('Class: DFrotzInterface', () => {
 		describe('Method: constructor', () => {
 			beforeEach(() => {
-				spyOn(DFrotzInterface.prototype, 'validateOptions');
+				spyOn(DFrotzInterface, 'validateOptions');
 				spyOn(path, 'join').and.callThrough();
 			});
 
 			it('should set options by default', () => {
 				let frotz = new DFrotzInterface();
 
-				expect(frotz.validateOptions).toHaveBeenCalled();
+				expect(DFrotzInterface.validateOptions).toHaveBeenCalled();
 
 				expect(path.join).toHaveBeenCalledTimes(3);
 
@@ -80,7 +80,7 @@ describe('Unit', () => {
 					outputFilter: mockFilter
 				});
 
-				expect(frotz.validateOptions).toHaveBeenCalled();
+				expect(DFrotzInterface.validateOptions).toHaveBeenCalled();
 				expect(frotz.executable).toEqual('test/executable');
 				expect(frotz.gameImage).toEqual('test/gameImage');
 				expect(frotz.saveFile).toEqual('test/save');
@@ -154,15 +154,9 @@ describe('Unit', () => {
 		});
 
 		describe('Method: validateOptions', () => {
-			let frotz;
-
-			beforeEach(() => {
-				frotz = new DFrotzInterface();
-			});
-
 			it('should not do anything for default params', () => {
 				spyOn(fs, 'statSync');
-				frotz.validateOptions({});
+				DFrotzInterface.validateOptions({});
 
 				expect(fs.statSync).not.toHaveBeenCalled();
 			});
@@ -173,10 +167,12 @@ describe('Unit', () => {
 				});
 
 				expect(() => {
-					frotz.validateOptions({
+					DFrotzInterface.validateOptions({
 						executable: 'test'
 					});
-				}).toThrow(new errors.FileError('Invalid file - test'));
+
+					expect(fs.statSync).toHaveBeenCalled();
+				}).toThrowError(errors.FileError, 'Invalid file - test');
 			});
 
 			it('should throw error if invalid path', () => {
@@ -188,16 +184,18 @@ describe('Unit', () => {
 				});
 
 				expect(() => {
-					frotz.validateOptions({
+					DFrotzInterface.validateOptions({
 						executable: 'test'
 					});
+
+					expect(fs.statSync).toHaveBeenCalled();
 				}).toThrowError(errors.FileError, 'Invalid file - test');
 			});
 
 			it('should skip saveFile', () => {
 				spyOn(fs, 'statSync');
 
-				frotz.validateOptions({
+				DFrotzInterface.validateOptions({
 					saveFile: './test.sav'
 				});
 
@@ -206,7 +204,7 @@ describe('Unit', () => {
 
 			it('should throw error if outputFilter is not a function', () => {
 				expect(() => {
-					frotz.validateOptions({
+					DFrotzInterface.validateOptions({
 						outputFilter: 'string'
 					});
 				}).toThrowError(TypeError, 'Expected type function, got type string');
