@@ -6,6 +6,9 @@
 
 Please note that this is written in ES6 and tranpile using Babel. Initially, I only allowed usage on Node > v6 but decided that backward compatibility was also important. In the future, I will implement usage of the ES6 source files for those who are on v6 and above.
 
+### What is this?
+This is a Node interface for playing Infocom games and other Z-machine games through the use of Frotz, an interpreter. It is essentially a wrapper for interacting with the CLI only version of the interpreter (dumb frotz). Now you can play text games via your JavaScript applications!
+
 ### Installation
 
 ```bash
