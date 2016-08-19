@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const q = require('q');
+const bluebird = require('bluebird');
 const childProcess = require('child_process');
 
 const DFrotzInterface = require('../index');
@@ -222,7 +222,7 @@ describe('Unit Test |', () => {
 					}
 				};
 
-				mockDefer = q.defer();
+				mockDefer = bluebird.defer();
 
 				spyOn(frotz.dfrotz.stdin, 'write');
 			});
@@ -234,7 +234,7 @@ describe('Unit Test |', () => {
 			});
 
 			it('should work with promises', () => {
-				spyOn(q, 'defer').and.returnValues(mockDefer);
+				spyOn(bluebird, 'defer').and.returnValues(mockDefer);
 				spyOn(mockDefer.promise, 'delay').and.callThrough();
 
 				frotz.command('command');
@@ -277,7 +277,7 @@ describe('Unit Test |', () => {
 				frotz.saveFile = './';
 
 				spyOn(frotz, 'command');
-				spyOn(q, 'all').and.callThrough();
+				spyOn(bluebird, 'all').and.callThrough();
 			});
 
 			it('should call restore', () => {
@@ -297,7 +297,7 @@ describe('Unit Test |', () => {
 			it('should consolidate promises', () => {
 				frotz.restoreSave();
 
-				expect(q.all).toHaveBeenCalled();
+				expect(bluebird.all).toHaveBeenCalled();
 			});
 		});
 
@@ -309,7 +309,7 @@ describe('Unit Test |', () => {
 				frotz.saveFile = './';
 
 				spyOn(frotz, 'command');
-				spyOn(q, 'all').and.callThrough();
+				spyOn(bluebird, 'all').and.callThrough();
 			});
 
 			it('should return a promise', () => {
@@ -331,7 +331,7 @@ describe('Unit Test |', () => {
 			it('should consolidate promises', () => {
 				frotz.writeSave();
 
-				expect(q.all).toHaveBeenCalled();
+				expect(bluebird.all).toHaveBeenCalled();
 			});
 		});
 
@@ -378,8 +378,8 @@ describe('Unit Test |', () => {
 				frotz = new DFrotzInterface();
 				mockFunction = () => {};
 				mockDefers = {
-					checkForSaveFile: q.defer(),
-					restoreSave: q.defer()
+					checkForSaveFile: bluebird.defer(),
+					restoreSave: bluebird.defer()
 				};
 
 				spyOn(frotz, 'checkForSaveFile').and.returnValues(mockDefers.checkForSaveFile.promise);
@@ -387,7 +387,7 @@ describe('Unit Test |', () => {
 				spyOn(frotz, 'restoreSave').and.returnValues(mockDefers.restoreSave.promise);
 				spyOn(frotz, 'command');
 				spyOn(frotz, 'writeSave');
-				spyOn(q, 'delay').and.callThrough();
+				spyOn(bluebird, 'delay').and.callThrough();
 			});
 
 			it('should iterate', (done) => {
@@ -398,7 +398,7 @@ describe('Unit Test |', () => {
 					expect(frotz.checkForSaveFile).toHaveBeenCalled();
 					expect(frotz.init).toHaveBeenCalledWith(mockFunction);
 					expect(frotz.restoreSave).toHaveBeenCalledWith(saveFileExists);
-					expect(q.delay).toHaveBeenCalledWith(100);
+					expect(bluebird.delay).toHaveBeenCalledWith(100);
 					expect(frotz.command).toHaveBeenCalledWith('look');
 					expect(frotz.writeSave).toHaveBeenCalled();
 
@@ -419,7 +419,7 @@ describe('Unit Test |', () => {
 				expect(frotz.checkForSaveFile).toHaveBeenCalled();
 				expect(frotz.init).toHaveBeenCalledWith(mockFunction);
 				expect(frotz.restoreSave).toHaveBeenCalledWith(saveFileExists);
-				expect(q.delay).toHaveBeenCalledWith(100);
+				expect(bluebird.delay).toHaveBeenCalledWith(100);
 				expect(frotz.command).toHaveBeenCalledWith('look');
 				expect(frotz.writeSave).toHaveBeenCalled();
 
