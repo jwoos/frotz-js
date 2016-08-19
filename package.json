@@ -1,6 +1,6 @@
 {
   "name": "frotz-interfacer",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Frotz interface for node",
   "main": "index.js",
   "engines": {
@@ -10,7 +10,7 @@
     "pretest": "./scripts/pretest.sh",
     "test": "./scripts/test.sh",
     "posttest": "./scripts/posttest.sh",
-		"prepublish": "./scripts/pretest.sh"
+    "prepublish": "./scripts/pretest.sh"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/jwoos/javascript_frotz#readme",
   "dependencies": {
-    "q": "^1.4.1"
+    "bluebird": "^3.4.1"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

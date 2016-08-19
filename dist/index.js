@@ -10,7 +10,7 @@ var fs = require('fs');
 var path = require('path');
 var childProcess = require('child_process');
 
-var q = require('q');
+var bluebird = require('bluebird');
 
 var errors = require('./errors');
 
@@ -44,7 +44,7 @@ var DFrotzInterface = function () {
 		value: function command(cmd) {
 			var timeout = arguments.length <= 1 || arguments[1] === undefined ? 10 : arguments[1];
 
-			var deferred = q.defer();
+			var deferred = bluebird.defer();
 
 			this.dfrotz.stdin.write(cmd + '\n', function () {
 				deferred.resolve();
@@ -61,7 +61,7 @@ var DFrotzInterface = function () {
 	}, {
 		key: 'checkForSaveFile',
 		value: function checkForSaveFile() {
-			var deferred = q.defer();
+			var deferred = bluebird.defer();
 
 			// don't reject
 			fs.stat(this.saveFile, function (err, stats) {
@@ -88,10 +88,10 @@ var DFrotzInterface = function () {
 				// Check file before restore
 				toResolve = [this.command('restore'), this.command(this.saveFile)];
 			} else {
-				toResolve = [q()];
+				toResolve = [bluebird.resolve()];
 			}
 
-			return q.all(toResolve);
+			return bluebird.all(toResolve);
 		}
 	}, {
 		key: 'writeSave',
@@ -100,7 +100,7 @@ var DFrotzInterface = function () {
 
 			var toResolve = [this.command('save'), this.command(this.saveFile), this.command('Y'), this.command('quit'), this.command('Y'), this.command('SI')];
 
-			return q.all(toResolve);
+			return bluebird.all(toResolve);
 		}
 	}, {
 		key: 'init',
@@ -150,11 +150,11 @@ var DFrotzInterface = function () {
 
 				_this2.init(cb);
 
-				return q(_this2.dfrotz);
+				return bluebird.resolve(_this2.dfrotz);
 			}).then(function () {
 				return _this2.restoreSave(save);
 			}).then(function () {
-				return q.delay(100);
+				return bluebird.delay(100);
 			}).then(function () {
 				_this2.dropAll = false;
 
@@ -164,7 +164,7 @@ var DFrotzInterface = function () {
 					throw new errors.DFrotzInterfaceError('A command must be provided');
 				}
 
-				return q.delay(100);
+				return bluebird.delay(100);
 			}).then(function () {
 				return _this2.writeSave();
 			}).catch(function (e) {
