@@ -1,12 +1,30 @@
 #!/usr/bin/env node
+'use strict';
 
-const path = require('path');
+// DON'T USE ES6 FEATURES
 
 const Jasmine = require('jasmine');
 const jasmine = new Jasmine();
 const specReporter = require('jasmine-spec-reporter');
 
-jasmine.loadConfigFile(path.join(__dirname, '/jasmine.json'));
+const args = process.argv.slice(2);
+
+let suite = [
+	args.indexOf('unit') > -1 ? 'unit/*.js' : null,
+	args.indexOf('integration') > -1 ? 'integration/*.js' : null,
+].filter((elem) => {
+	return !!elem;
+});
+
+jasmine.loadConfig({
+	spec_dir: 'test',
+	spec_files: suite.length ? suite : [
+		'unit/*.js',
+		'integration/*.js'
+	],
+	stopOnExpectationFailure: true,
+	random: false
+});
 
 jasmine.configureDefaultReporter({
 	print: () => {}
