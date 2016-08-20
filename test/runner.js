@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+'use strict';
+
+// DON'T USE ES6 FEATURES
 
 const Jasmine = require('jasmine');
 const jasmine = new Jasmine();
@@ -7,8 +10,8 @@ const specReporter = require('jasmine-spec-reporter');
 const args = process.argv.slice(2);
 
 let suite = [
-	args.includes('unit') ? 'unit/*.js' : null,
-	args.includes('integration') ? 'integration/*.js' : null,
+	args.indexOf('unit') > -1 ? 'unit/*.js' : null,
+	args.indexOf('integration') > -1 ? 'integration/*.js' : null,
 ].filter((elem) => {
 	return !!elem;
 });

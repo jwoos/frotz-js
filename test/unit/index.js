@@ -294,7 +294,7 @@ describe('Class: DFrotzInterface', () => {
 
 			let promise = frotz.checkForSaveFile();
 
-			promise.finally(() => {
+			promise.catch(() => {
 				expect(promise.isRejected()).toEqual(true);
 			});
 		});
@@ -402,7 +402,7 @@ describe('Class: DFrotzInterface', () => {
 		});
 	});
 
-	xdescribe('Method: iteration', () => {
+	describe('Method: iteration', () => {
 		let frotz, mockFunction, mockDefers;
 
 		beforeEach(() => {
@@ -414,7 +414,9 @@ describe('Class: DFrotzInterface', () => {
 			};
 
 			spyOn(frotz, 'checkForSaveFile').and.returnValues(mockDefers.checkForSaveFile.promise);
-			spyOn(frotz, 'init');
+			spyOn(frotz, 'init').and.callFake(() => {
+				frotz.dfrotz = {};
+			});
 			spyOn(frotz, 'restoreSave').and.returnValues(mockDefers.restoreSave.promise);
 			spyOn(frotz, 'command');
 			spyOn(frotz, 'writeSave');
@@ -424,6 +426,9 @@ describe('Class: DFrotzInterface', () => {
 		it('should iterate', (done) => {
 			let result = frotz.iteration('look', mockFunction);
 			let saveFileExists = true;
+
+			mockDefers.checkForSaveFile.resolve(saveFileExists);
+			mockDefers.restoreSave.resolve();
 
 			result.then(() => {
 				expect(frotz.checkForSaveFile).toHaveBeenCalled();
@@ -435,26 +440,18 @@ describe('Class: DFrotzInterface', () => {
 
 				done();
 			});
-
-			mockDefers.checkForSaveFile.resolve(saveFileExists);
-			mockDefers.restoreSave.resolve();
 		});
 
-		it('should throw error if no command', (done) => {
-			frotz.iteration('', mockFunction);
-			let saveFileExists = true;
+		it('should handle promise rejections', (done) => {
+			spyOn(console, 'error');
+			let result = frotz.iteration('look', mockFunction);
 
-			mockDefers.checkForSaveFile.resolve(saveFileExists);
-			mockDefers.restoreSave.resolve();
+			mockDefers.checkForSaveFile.reject();
 
-			expect(frotz.checkForSaveFile).toHaveBeenCalled();
-			expect(frotz.init).toHaveBeenCalledWith(mockFunction);
-			expect(frotz.restoreSave).toHaveBeenCalledWith(saveFileExists);
-			expect(bluebird.delay).toHaveBeenCalledWith(100);
-			expect(frotz.command).toHaveBeenCalledWith('look');
-			expect(frotz.writeSave).toHaveBeenCalled();
-
-			done();
+			result.finally(() => {
+				expect(console.error).toHaveBeenCalled();
+				done();
+			});
 		});
 	});
 });
