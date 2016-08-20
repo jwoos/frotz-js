@@ -42,42 +42,39 @@ var DFrotzInterface = function () {
 	_createClass(DFrotzInterface, [{
 		key: 'command',
 		value: function command(cmd) {
+			var _this = this;
+
 			var timeout = arguments.length <= 1 || arguments[1] === undefined ? 10 : arguments[1];
 
-			var deferred = bluebird.defer();
-
-			this.dfrotz.stdin.write(cmd + '\n', function () {
-				deferred.resolve();
+			var promise = new bluebird(function (resolve) {
+				_this.dfrotz.stdin.write(cmd + '\n', function () {
+					resolve();
+				});
 			});
 
-			var promise = deferred.promise;
-
-			if (timeout) {
-				promise = deferred.promise.delay(timeout);
-			}
-
-			return promise;
+			return timeout ? promise.delay(timeout) : promise;
 		}
 	}, {
 		key: 'checkForSaveFile',
 		value: function checkForSaveFile() {
-			var deferred = bluebird.defer();
+			var _this2 = this;
 
-			// don't reject
-			fs.stat(this.saveFile, function (err, stats) {
-				if (err) {
-					deferred.resolve(false);
-				} else {
-					// TODO handle this better
-					if (!stats.isFile()) {
-						deferred.reject();
+			var promise = new bluebird(function (resolve, reject) {
+				fs.stat(_this2.saveFile, function (err, stats) {
+					if (err) {
+						resolve(false);
+					} else {
+						// TODO handle this better
+						if (!stats.isFile()) {
+							reject();
+						}
+
+						resolve(true);
 					}
-
-					deferred.resolve(true);
-				}
+				});
 			});
 
-			return deferred.promise;
+			return promise;
 		}
 	}, {
 		key: 'restoreSave',
@@ -105,7 +102,7 @@ var DFrotzInterface = function () {
 	}, {
 		key: 'init',
 		value: function init(cb) {
-			var _this = this;
+			var _this3 = this;
 
 			var output = '';
 			var dfrotzArgs = ['-w', '500', '-h', '999', this.gameImage];
@@ -114,8 +111,8 @@ var DFrotzInterface = function () {
 				if (!stderr && !error) {
 					output = output.replace('\r', '').split('\n');
 
-					if (_this.outputFilter) {
-						output = output.filter(_this.outputFilter);
+					if (_this3.outputFilter) {
+						output = output.filter(_this3.outputFilter);
 						output[0] = DFrotzInterface.stripWhiteSpace(output[0], true);
 					}
 				}
@@ -132,7 +129,7 @@ var DFrotzInterface = function () {
 			this.dfrotz.stdout.on('data', function (data) {
 				data = DFrotzInterface.stripWhiteSpace(data.toString(), false, true);
 
-				if (data && !_this.dropAll) {
+				if (data && !_this3.dropAll) {
 					output += data;
 				}
 			});
@@ -140,33 +137,33 @@ var DFrotzInterface = function () {
 	}, {
 		key: 'iteration',
 		value: function iteration(cmd, cb) {
-			var _this2 = this;
+			var _this4 = this;
 
 			var save = void 0;
 
 			return this.checkForSaveFile().then(function (saveFileExists) {
-				_this2.dropAll = saveFileExists;
+				_this4.dropAll = saveFileExists;
 				save = saveFileExists;
 
-				_this2.init(cb);
+				_this4.init(cb);
 
-				return bluebird.resolve(_this2.dfrotz);
+				return bluebird.resolve(_this4.dfrotz);
 			}).then(function () {
-				return _this2.restoreSave(save);
+				return _this4.restoreSave(save);
 			}).then(function () {
 				return bluebird.delay(100);
 			}).then(function () {
-				_this2.dropAll = false;
+				_this4.dropAll = false;
 
 				if (cmd) {
-					_this2.command(cmd);
+					_this4.command(cmd);
 				} else {
 					throw new errors.DFrotzInterfaceError('A command must be provided');
 				}
 
 				return bluebird.delay(100);
 			}).then(function () {
-				return _this2.writeSave();
+				return _this4.writeSave();
 			}).catch(function (e) {
 				// do something
 				console.error(e);
