@@ -212,7 +212,6 @@ describe('Unit Test |', () => {
 
 		describe('Method: command', () => {
 			let frotz;
-			let mockDefer;
 
 			beforeEach(() => {
 				frotz = new DFrotzInterface();
@@ -221,8 +220,6 @@ describe('Unit Test |', () => {
 						write: () => {}
 					}
 				};
-
-				mockDefer = bluebird.defer();
 
 				spyOn(frotz.dfrotz.stdin, 'write');
 			});
@@ -234,12 +231,13 @@ describe('Unit Test |', () => {
 			});
 
 			it('should work with promises', () => {
-				spyOn(bluebird, 'defer').and.returnValues(mockDefer);
-				spyOn(mockDefer.promise, 'delay').and.callThrough();
+				spyOn(bluebird.prototype, 'delay').and.callThrough();
 
-				frotz.command('command');
+				let promise = frotz.command('command');
 
-				expect(mockDefer.promise.delay).toHaveBeenCalledWith(10);
+				expect(bluebird.prototype.delay).toHaveBeenCalledWith(10);
+				expect(promise instanceof bluebird).toEqual(true);
+				expect(promise.isPending()).toEqual(true);
 			});
 		});
 
@@ -251,7 +249,9 @@ describe('Unit Test |', () => {
 			});
 
 			it('should return a promise', () => {
-				expect(frotz.checkForSaveFile().then).not.toBeNull();
+				let promise = frotz.checkForSaveFile();
+
+				expect(promise instanceof bluebird).toEqual(true);
 			});
 
 			it('should always resolve', () => {
