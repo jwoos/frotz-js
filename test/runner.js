@@ -1,12 +1,27 @@
 #!/usr/bin/env node
 
-const path = require('path');
-
 const Jasmine = require('jasmine');
 const jasmine = new Jasmine();
 const specReporter = require('jasmine-spec-reporter');
 
-jasmine.loadConfigFile(path.join(__dirname, '/jasmine.json'));
+const args = process.argv.slice(2);
+
+let suite = [
+	args.includes('unit') ? 'unit/*.js' : null,
+	args.includes('integration') ? 'integration/*.js' : null,
+].filter((elem) => {
+	return !!elem;
+});
+
+jasmine.loadConfig({
+	spec_dir: 'test',
+	spec_files: suite.length ? suite : [
+		'unit/*.js',
+		'integration/*.js'
+	],
+	stopOnExpectationFailure: true,
+	random: false
+});
 
 jasmine.configureDefaultReporter({
 	print: () => {}

@@ -29,7 +29,7 @@ var DFrotzInterfaceError = function (_Error2) {
 
 		var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(DFrotzInterfaceError).call(this, message));
 
-		_this2.name = 'StdoutError';
+		_this2.name = 'DFrotzInterfaceError';
 		return _this2;
 	}
 

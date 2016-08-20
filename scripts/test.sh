@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-istanbul cover test/runner.js
+# TODO remove unit after integration tests are done
+istanbul cover test/runner.js unit
