@@ -69,17 +69,17 @@ output: {
 ### Example
 
 ```js
-const frotz = require('node-frotz');
+const frotz = require('frotz-interfacer');
 
 let interfacer = new frotz({
 	executable: '/path/to/executable',
 	gameImage: '/path/to/game/file',
 	saveFile: '/path/to/save',
-	outputFilter: aFilterFunction
+	outputFilter: frotz.filter
 });
 
 interfacer.iteration('look', (error, output) => {
-	if (error) {
+	if (error && error.error) {
 		console.log(error.error);
 	} else {
 		console.log(output.pretty);
