@@ -39,3 +39,5 @@ ifroot
 
 # zork save files
 *.sav
+
+dist/
