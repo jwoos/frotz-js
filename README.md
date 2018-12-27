@@ -1,9 +1,5 @@
 # Node integration for frotz
 
-[![Build Status](https://travis-ci.org/jwoos/javascript_frotz.svg?branch=master)](https://travis-ci.org/jwoos/javascript_frotz)
-[![Dependency Status](https://dependencyci.com/github/jwoos/javascript_frotz/badge)](https://dependencyci.com/github/jwoos/javascript_frotz)
-[![Coverage Status](https://coveralls.io/repos/github/jwoos/javascript_frotz/badge.svg)](https://coveralls.io/github/jwoos/javascript_frotz)
-
 Please note that this is written in ES6 and tranpile using Babel. Initially, I only allowed usage on Node > v6 but decided that backward compatibility was also important. In the future, I will implement usage of the ES6 source files for those who are on v6 and above.
 
 ### What is this?
